@@ -2,13 +2,19 @@ const buttonGrid = document.getElementById('button-grid');
 const codeDisplay = document.getElementById('code-display');
 let activeButton = null;
 
-// Создаем 24 кнопки
+// Создаем 24 кнопки с явным порядком
+const buttons = [];
 for (let i = 1; i <= 24; i++) {
     const button = document.createElement('button');
     button.textContent = `Вариант ${i}`;
     button.dataset.index = i;
     button.addEventListener('click', () => showCode(i, button));
-    buttonGrid.appendChild(button);
+    buttons.push(button);
+}
+
+// Добавляем кнопки в grid в нужном порядке: 1-2, 3-4, ..., 23-24
+for (let i = 0; i < buttons.length; i++) {
+    buttonGrid.appendChild(buttons[i]);
 }
 
 function showCode(index, button) {
