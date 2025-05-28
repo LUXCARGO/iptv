@@ -39,6 +39,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+    grid-auto-flow: row; /* Явно задаём заполнение по строкам */
 }
 
 button {
@@ -63,7 +64,7 @@ button:hover {
 button.active {
     background-color: #2ecc71;
     transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3ISAM);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 #code-display {
@@ -109,4 +110,4 @@ button.active {
         padding: 20px;
         font-size: 14px;
     }
-}
+    }
