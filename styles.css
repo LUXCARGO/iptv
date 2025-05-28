@@ -39,7 +39,6 @@ h1 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-    grid-auto-flow: row; /* Явно задаём заполнение по строкам */
 }
 
 button {
@@ -110,4 +109,4 @@ button.active {
         padding: 20px;
         font-size: 14px;
     }
-    }
+}
