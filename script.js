@@ -23,6 +23,6 @@ function showCode(index, button) {
     codeDisplay.textContent = code;
     codeDisplay.classList.add('active');
 
-    // Автоскролл к началу блока с кодом
-    codeDisplay.scrollTop = 0;
+    // Автоскролл к блоку с кодом
+    codeDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
