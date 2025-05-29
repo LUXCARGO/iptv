@@ -1,18 +1,15 @@
 const buttonGrid = document.getElementById('button-grid');
 const codeDisplay = document.getElementById('code-display');
-const themeToggle = document.getElementById('theme-toggle');
+const themeToggleBtn = document.getElementById('theme-toggle');
 let activeButton = null;
 
-// Создаем кнопки 2 колонки по 12 строк
-for (let row = 0; row < 12; row++) {
-    for (let col = 0; col < 2; col++) {
-        let i = row * 2 + col + 1;
-        const button = document.createElement('button');
-        button.textContent = `Вариант ${i}`;
-        button.dataset.index = i;
-        button.addEventListener('click', () => showCode(i, button));
-        buttonGrid.appendChild(button);
-    }
+// Создаем 24 кнопки
+for (let i = 1; i <= 24; i++) {
+    const button = document.createElement('button');
+    button.textContent = `Вариант ${i}`;
+    button.dataset.index = i;
+    button.addEventListener('click', () => showCode(i, button));
+    buttonGrid.appendChild(button);
 }
 
 function showCode(index, button) {
@@ -27,13 +24,17 @@ function showCode(index, button) {
     codeDisplay.textContent = code;
     codeDisplay.classList.add('active');
 
-    // Автоскролл к коду
-    setTimeout(() => {
-        codeDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+    // Авто скролл к началу блока с кодом
+    codeDisplay.scrollTop = 0;
 }
 
 // Переключение темы
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('light');
+themeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('light-theme');
+
+    if (document.body.classList.contains('light-theme')) {
+        themeToggleBtn.textContent = 'Тёмная тема';
+    } else {
+        themeToggleBtn.textContent = 'Светлая тема';
+    }
 });
