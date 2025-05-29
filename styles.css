@@ -12,6 +12,7 @@ body {
     align-items: flex-start;
     min-height: 100vh;
     padding: 24px;
+    color: #f0f0f0;
 }
 
 .container {
@@ -30,17 +31,33 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 12px;
 }
 
 h1 {
-    color: #f0f0f0;
     font-size: 30px;
     font-weight: 700;
     letter-spacing: 0.8px;
     text-transform: uppercase;
+    color: #f0f0f0;
 }
 
-/* ВСЕГДА 2 колонки */
+#theme-toggle {
+    background-color: #4b8bf5;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#theme-toggle:hover {
+    background-color: #3b82f6;
+}
+
 .button-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -49,7 +66,7 @@ h1 {
 
 button {
     padding: 16px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     border: none;
     background-color: #4b8bf5;
@@ -58,8 +75,7 @@ button {
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
     text-align: center;
-    min-width: 120px; /* фиксированная минимальная ширина */
-    word-break: break-word; /* если текст длинный, переносить */
+    width: 100%;
 }
 
 button:hover {
@@ -87,43 +103,70 @@ button.active {
     white-space: pre-wrap;
     display: none;
     overflow-x: auto;
+    overflow-y: auto;
 }
 
 #code-display.active {
     display: block;
 }
 
-/* Адаптивность по размерам шрифтов и отступам, но не меняем кол-во колонок */
-
-@media (max-width: 768px) {
-    .button-grid {
-        gap: 14px;
-    }
-
-    button {
-        padding: 14px;
-        font-size: 15px;
-        min-width: 120px;
-    }
-
-    h1 {
-        font-size: 28px;
-    }
+/* Светлая тема */
+body.light-theme {
+    background: linear-gradient(135deg, #ffffff 0%, #eaeaea 100%);
+    color: #222222;
 }
 
+body.light-theme .container {
+    background-color: #f9f9f9;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme h1 {
+    color: #222222;
+}
+
+body.light-theme #theme-toggle {
+    background-color: #2d74f5;
+    color: #fff;
+}
+
+body.light-theme #theme-toggle:hover {
+    background-color: #1c5ed6;
+}
+
+body.light-theme button {
+    background-color: #2d74f5;
+    color: #fff;
+}
+
+body.light-theme button:hover {
+    background-color: #1c5ed6;
+}
+
+body.light-theme button.active {
+    background-color: #27ae60;
+}
+
+body.light-theme #code-display {
+    background-color: #f0f0f0;
+    color: #222222;
+    border-color: #ccc;
+}
+
+/* Адаптивность */
 @media (max-width: 500px) {
     .container {
         padding: 20px;
     }
 
     .button-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
 
     button {
         padding: 14px;
-        font-size: 15px;
-        min-width: 120px;
+        font-size: 13px;
     }
 
     h1 {
