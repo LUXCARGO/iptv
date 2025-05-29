@@ -1,106 +1,87 @@
-:root {
-    --bg-color: #1e1e1e;
-    --text-color: #ffffff;
-    --button-bg: #333333;
-    --button-active-bg: #007acc;
-    --code-bg: #2d2d2d;
-    --code-border: #444;
-    --toggle-bg: #444;
-    --toggle-text: #fff;
-}
-
-/* Светлая тема */
-body.light {
-    --bg-color: #f5f5f5;
-    --text-color: #000000;
-    --button-bg: #e0e0e0;
-    --button-active-bg: #4a90e2;
-    --code-bg: #ffffff;
-    --code-border: #ccc;
-    --toggle-bg: #ddd;
-    --toggle-text: #000;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.container {
+    max-width: 640px;
+    width: 100%;
+    background-color: #2d2d2d;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 h1 {
-    margin: 0;
-    text-align: left;
-    font-size: 28px;
+    color: #f0f0f0;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
 }
 
-#theme-toggle {
-    background-color: var(--toggle-bg);
-    color: var(--toggle-text);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
-
+/* ВСЕГДА 2 колонки */
 .button-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    justify-items: center;
-    gap: 12px;
-    max-width: 500px;
-    margin: 0 auto 30px;
+    gap: 16px;
 }
 
 button {
-    width: 100%;
-    max-width: 220px;
     padding: 16px;
     font-size: 16px;
     font-weight: 500;
     border: none;
-    background-color: var(--button-bg);
-    color: var(--text-color);
+    background-color: #4b8bf5;
+    color: #ffffff;
     border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
     text-align: center;
+    min-width: 120px; /* фиксированная минимальная ширина */
+    word-break: break-word; /* если текст длинный, переносить */
 }
 
 button:hover {
-    background-color: var(--button-active-bg);
-    transform: scale(1.02);
-    box-shadow: 0 0 10px rgba(0, 122, 204, 0.3);
+    background-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 button.active {
-    background-color: var(--button-active-bg);
-    box-shadow: 0 0 10px rgba(0, 122, 204, 0.5);
+    background-color: #2ecc71;
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 #code-display {
-    background-color: var(--code-bg);
-    color: var(--text-color);
-    padding: 20px;
-    border: 1px solid var(--code-border);
+    background-color: #1e1e1e;
+    padding: 24px;
     border-radius: 10px;
-    white-space: pre-wrap;
-    font-family: Consolas, monospace;
-    line-height: 1.5;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-    max-width: 900px;
-    margin: 0 auto;
-}    font-size: 15px;
+    border: 1px solid #3a3a3a;
+    min-height: 240px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
     line-height: 1.7;
     color: #d4d4d4;
     white-space: pre-wrap;
@@ -112,20 +93,37 @@ button.active {
     display: block;
 }
 
-/* Адаптивность */
+/* Адаптивность по размерам шрифтов и отступам, но не меняем кол-во колонок */
+
+@media (max-width: 768px) {
+    .button-grid {
+        gap: 14px;
+    }
+
+    button {
+        padding: 14px;
+        font-size: 15px;
+        min-width: 120px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+}
+
 @media (max-width: 500px) {
     .container {
         padding: 20px;
     }
 
     .button-grid {
-        grid-template-columns: 1fr;
         gap: 12px;
     }
 
     button {
         padding: 14px;
         font-size: 15px;
+        min-width: 120px;
     }
 
     h1 {
