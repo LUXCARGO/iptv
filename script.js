@@ -1,6 +1,5 @@
 const buttonGrid = document.getElementById('button-grid');
 const codeDisplay = document.getElementById('code-display');
-const themeToggleBtn = document.getElementById('theme-toggle');
 let activeButton = null;
 
 // Создаем 24 кнопки
@@ -24,17 +23,6 @@ function showCode(index, button) {
     codeDisplay.textContent = code;
     codeDisplay.classList.add('active');
 
-    // Авто скролл к началу блока с кодом
+    // Автоскролл к началу блока с кодом
     codeDisplay.scrollTop = 0;
 }
-
-// Переключение темы
-themeToggleBtn.addEventListener('click', () => {
-    document.body.classList.toggle('light-theme');
-
-    if (document.body.classList.contains('light-theme')) {
-        themeToggleBtn.textContent = 'Тёмная тема';
-    } else {
-        themeToggleBtn.textContent = 'Светлая тема';
-    }
-});
