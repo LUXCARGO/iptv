@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Генератор IPTV плейлиста</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(135deg, #4a90e2, #0052d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #ffffff;
+      width: 100%;
+      max-width: 650px;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .channel-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .channel-inputs input {
+      flex: 1;
+      min-width: 140px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .channel-inputs button {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .channel-inputs button:hover {
+      background: #c0392b;
+    }
+
+    .btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+    }
+
+    .add-btn {
+      margin-bottom: 10px;
+      background: #28a745;
+    }
+
+    .add-btn:hover {
+      background: #1e7e34;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .output-box {
+      margin-top: 20px;
+      text-align: left;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      height: 250px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 13px;
+      user-select: all;
+    }
+
+    .file-input {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎬 Генератор IPTV плейлиста</h1>
+
+    <!-- Импорт CSV / Excel -->
+    <div class="file-input">
+      <input type="file" id="fileInput" accept=".csv, .xlsx">
+    </div>
+
+    <div id="channels"></div>
+
+    <button class="btn add-btn" onclick="addChannel()">➕ Добавить канал</button>
+
+    <div class="actions">
+      <button class="btn" onclick="generatePlaylist()">📄 Сгенерировать</button>
+      <button class="btn" onclick="downloadPlaylist()">⬇ Скачать index.m3u</button>
+      <button class="btn" onclick="copyPlaylist()">📋 Копировать</button>
+      <button class="btn" onclick="downloadTemplate()">📥 Скачать шаблон</button>
+    </div>
+
+    <div id="output" class="output-box" readonly>
+      Сгенерированный плейлист появится здесь...
+    </div>
+  </div>
+
+  <!-- Подключаем XLSX для импорта Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    const channelsContainer = document.getElementById('channels');
+    const outputBox = document.getElementById('output');
+    const fileInput = document.getElementById('fileInput');
+
+    function addChannel(name = '', url = '', group = '') {
+      const div = document.createElement('div');
+      div.className = 'channel-inputs';
+      div.innerHTML = `
+        <input type="text" placeholder="Название" value="${name}">
+        <input type="text" placeholder="URL потока" value="${url}">
+        <input type="text" placeholder="Категория" value="${group}">
+        <button type="button" onclick="this.parentNode.remove()">✖</button>
+      `;
+      channelsContainer.appendChild(div);
+    }
+
+    function generatePlaylist() {
+      let playlist = '#EXTM3U\n';
+      const channelBlocks = document.querySelectorAll('.channel-inputs');
+      channelBlocks.forEach(block => {
+        const inputs = block.querySelectorAll('input');
+        const title = inputs[0].value.trim();
+        const link = inputs[1].value.trim();
+        const group = inputs[2].value.trim();
+        if (title && link) {
+          playlist += `#EXTINF:-1 group-title="${group}",${title}\n${link}\n`;
+        }
+      });
+      outputBox.textContent = playlist;
+    }
+
+    function downloadPlaylist() {
+      generatePlaylist();
+      const blob = new Blob([outputBox.textContent], { type: 'audio/x-mpegurl' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'index.m3u';  // фиксированное имя
+      a.click();
+    }
+
+    function copyPlaylist() {
+      generatePlaylist();
+      const temp = document.createElement('textarea');
+      temp.value = outputBox.textContent;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+      alert('Плейлист скопирован в буфер обмена ✅');
+    }
+
+    // Скачать шаблон CSV
+    function downloadTemplate() {
+      const csvContent = "Название,URL,Категория\nChannel 1,http://example.com/1.m3u8,Новости\nChannel 2,http://example.com/2.m3u8,Спорт\n";
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'template.csv';
+      a.click();
+    }
+
+    // Импорт CSV / Excel
+    fileInput.addEventListener('change', function() {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      if (file.name.endsWith('.csv')) {
+        reader.onload = e => {
+          const text = e.target.result;
+          parseCSV(text);
+        };
+        reader.readAsText(file);
+      } else if (file.name.endsWith('.xlsx')) {
+        reader.onload = e => {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheet = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[firstSheet];
+          const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+          parseArray(json);
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    });
+
+    function parseCSV(text) {
+      const rows = text.split('\n').map(r => r.split(','));
+      parseArray(rows);
+    }
+
+    function parseArray(rows) {
+      // Пропускаем заголовки
+      rows.slice(1).forEach(row => {
+        const [name, url, group] = row;
+        if (name && url) {
+          addChannel(name.trim(), url.trim(), (group || '').trim());
+        }
+      });
+    }
+
+    // Стартовый один блок
+    addChannel();
+  </script>
+
+</body>
+  </html>
