@@ -20,7 +20,7 @@
     .container {
       background: #ffffff;
       width: 100%;
-      max-width: 650px;
+      max-width: 700px;
       padding: 25px;
       border-radius: 15px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
@@ -43,7 +43,7 @@
 
     .channel-inputs input {
       flex: 1;
-      min-width: 140px;
+      min-width: 120px;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 5px;
@@ -121,7 +121,6 @@
   <div class="container">
     <h1>🎬 Генератор IPTV плейлиста</h1>
 
-    <!-- Импорт CSV / Excel -->
     <div class="file-input">
       <input type="file" id="fileInput" accept=".csv, .xlsx">
     </div>
@@ -142,7 +141,6 @@
     </div>
   </div>
 
-  <!-- Подключаем XLSX для импорта Excel -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <script>
@@ -150,13 +148,14 @@
     const outputBox = document.getElementById('output');
     const fileInput = document.getElementById('fileInput');
 
-    function addChannel(name = '', url = '', group = '') {
+    function addChannel(name = '', url = '', group = '', logo = '') {
       const div = document.createElement('div');
       div.className = 'channel-inputs';
       div.innerHTML = `
         <input type="text" placeholder="Название" value="${name}">
         <input type="text" placeholder="URL потока" value="${url}">
         <input type="text" placeholder="Категория" value="${group}">
+        <input type="text" placeholder="Ссылка на логотип" value="${logo}">
         <button type="button" onclick="this.parentNode.remove()">✖</button>
       `;
       channelsContainer.appendChild(div);
@@ -170,8 +169,9 @@
         const title = inputs[0].value.trim();
         const link = inputs[1].value.trim();
         const group = inputs[2].value.trim();
+        const logo = inputs[3].value.trim();
         if (title && link) {
-          playlist += `#EXTINF:-1 group-title="${group}",${title}\n${link}\n`;
+          playlist += `#EXTINF:-1 tvg-logo="${logo}" group-title="${group}",${title}\n${link}\n`;
         }
       });
       outputBox.textContent = playlist;
@@ -182,7 +182,7 @@
       const blob = new Blob([outputBox.textContent], { type: 'audio/x-mpegurl' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'index.m3u';  // фиксированное имя
+      a.download = 'index.m3u';
       a.click();
     }
 
@@ -197,9 +197,8 @@
       alert('Плейлист скопирован в буфер обмена ✅');
     }
 
-    // Скачать шаблон CSV
     function downloadTemplate() {
-      const csvContent = "Название,URL,Категория\nChannel 1,http://example.com/1.m3u8,Новости\nChannel 2,http://example.com/2.m3u8,Спорт\n";
+      const csvContent = "Название,URL,Категория,Логотип\nChannel 1,http://example.com/1.m3u8,Новости,http://example.com/logo1.png\nChannel 2,http://example.com/2.m3u8,Спорт,http://example.com/logo2.png\n";
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -207,7 +206,6 @@
       a.click();
     }
 
-    // Импорт CSV / Excel
     fileInput.addEventListener('change', function() {
       const file = fileInput.files[0];
       if (!file) return;
@@ -238,18 +236,16 @@
     }
 
     function parseArray(rows) {
-      // Пропускаем заголовки
       rows.slice(1).forEach(row => {
-        const [name, url, group] = row;
+        const [name, url, group, logo] = row;
         if (name && url) {
-          addChannel(name.trim(), url.trim(), (group || '').trim());
+          addChannel(name.trim(), url.trim(), (group || '').trim(), (logo || '').trim());
         }
       });
     }
 
-    // Стартовый один блок
     addChannel();
   </script>
 
 </body>
-  </html>
+</html>
